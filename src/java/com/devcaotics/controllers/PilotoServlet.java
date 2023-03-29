@@ -63,7 +63,31 @@ public class PilotoServlet extends HttpServlet {
             throws ServletException, IOException {
         
         String atualizar = request.getParameter("atualizar");
+        String deletar = request.getParameter("deletar");
         String codAux = request.getParameter("codigo");
+        
+        if(deletar != null) {
+            int codigo = Integer.parseInt(codAux);
+            
+            Piloto p = RepositorioPiloto.getCurrentInstance().ler(codigo);
+            
+            RepositorioPiloto.getCurrentInstance().deletar(codigo);
+            
+             response.setContentType("text/html;charset=UTF-8");
+             try (PrintWriter out = response.getWriter()) {
+                /* TODO output your page here. You may use following sample code. */
+                out.println("<!DOCTYPE html>");
+                out.println("<html>");
+                out.println("<head>");
+                out.println("<title>Servlet CadastroPilotoServlet</title>");            
+                out.println("</head>");
+                out.println("<body>");
+                out.println("<h1>Piloto "+p.getCodNome()+"foi deletado com sucesso!</h1>");
+                out.println("<a href='index.html'>Home</a>");
+                out.println("</body>");
+                out.println("</html>");
+             } 
+        }
         
         if(atualizar != null) {
             
@@ -97,7 +121,7 @@ public class PilotoServlet extends HttpServlet {
                 }
         }
         
-        if(codAux == null && atualizar == null){
+        if(codAux == null && atualizar == null && deletar == null){
             
             List<Piloto> pilotos = RepositorioPiloto.getCurrentInstance().lerTudo();
             response.setContentType("text/html;charset=UTF-8");
@@ -130,7 +154,8 @@ public class PilotoServlet extends HttpServlet {
                         out.println("<td>" + p.getCarro() + "</td>");
                         out.println("<td>" + p.getContato() + "</td>");
                         out.println("<td><a href=\"PilotoServlet?codigo=" + p.getCodigo() + "\"> Visualizar </a>"
-                                + "<a href='PilotoServlet?codigo=" + p.getCodigo() + "&atualizar=1'></a></td>");
+                                + "<a href='PilotoServlet?codigo=" + p.getCodigo() + "&atualizar=1'> Atualizar </a>"
+                                + "<a href='PilotoServlet?codigo=" + p.getCodigo() + "&deletar=1'> Deletar </a></td>");
                      out.println("</tr>");
                  }
                 out.println("</table>");
